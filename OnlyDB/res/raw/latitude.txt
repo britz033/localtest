@@ -1,4 +1,5 @@
-﻿00304	,	(주)성안건너	,	http://map.naver.com/?dlevel=11&x=128.6242479&y=35.9153336&stationId=434270&enc=b64
+﻿
+00304	,	(주)성안건너	,	http://map.naver.com/?dlevel=11&x=128.6242479&y=35.9153336&stationId=434270&enc=b64
 03092	,	(주)영화건너	,	http://map.naver.com/?dlevel=11&x=128.4239036&y=35.6336569&stationId=423612&enc=b64
 03091	,	(주)영화앞	,	http://map.naver.com/?dlevel=11&x=128.4237827&y=35.6337655&stationId=423611&enc=b64
 01125	,	1차서한화성타운앞	,	http://map.naver.com/?dlevel=11&x=128.5288182&y=35.8541694&stationId=433544&enc=b64

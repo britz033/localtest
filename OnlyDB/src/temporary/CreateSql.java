@@ -83,8 +83,8 @@ public class CreateSql {
 				StationItem item = new StationItem();
 				item.station_number = matcher.group(1);
 				item.station_name = matcher.group(2);
-				item.station_latitude = Double.valueOf(matcher.group(3));
-				item.station_longitude = Double.valueOf(matcher.group(4));
+				item.station_latitude = Double.valueOf(matcher.group(4));
+				item.station_longitude = Double.valueOf(matcher.group(3));
 				stationList.add(item);
 			}
 		}

@@ -23,8 +23,10 @@ public class CreateSql {
 		Log.d("DB 작성 클래스 ","시작");
 		mcontext = context;
 		ArrayList<StationItem> stationList = null;
+		ArrayList<String> interval = null;
 		try {
 			stationList = makeList();
+			interval = getBusInterval();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -33,14 +35,25 @@ public class CreateSql {
 				"station_number TEXT NOT NULL," +
 				"station_name TEXT NOT NULL," +
 				"station_latitude DOUBLE NOT NULL," +
-				"station_longitude DOUBLE NOT NULL)";
+				"station_longitude DOUBLE NOT NULL," +
+				"station_favorite INTEGER NOT NULL DEFAULT 0)";
 		db.execSQL(sql);
+		
+		
+		// _id  버스번호, 배차간격, 즐겨찾기, 정방향역, 역방향역 
+		String sql2 = "CREATE TABLE busInfo(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+				"bus_number TEXT NOT NULL," +
+				"bus_interval TEXT NOT NULL," +
+				"bus_forward TEXT NOT NULL," +
+				"bus_backward TEXT," +
+				"bus_favorite INTEGER NOT NULL DEFAULT 0)";
+		db.execSQL(sql2);
 		
 		db.beginTransaction();
 		
 		try {
 			for (int i = 0; i < stationList.size(); i++) {
-				sql = "INSERT INTO stationInfo(station_number,station_name,station_latitude,station_longitude) VALUES("
+				sql = "INSERT INTO stationInfo(station_number,station_name,station_latitude,station_longitude,station_favorite,station_bus_favorite) VALUES("
 						+ "'"
 						+ stationList.get(i).getStation_number()
 						+ "',"
@@ -49,7 +62,10 @@ public class CreateSql {
 						+ "',"
 						+ stationList.get(i).getStation_latitude()
 						+ ","
-						+ stationList.get(i).getStation_longitude() + ")";
+						+ stationList.get(i).getStation_longitude()
+						+","
+						+ "0," + "'000'"
+						+ ")";
 				db.execSQL(sql);
 			}
 			db.setTransactionSuccessful();
@@ -72,6 +88,8 @@ public class CreateSql {
 		 * 01125	,	1차서한화성타운앞	,	http://map.naver.com/?dlevel=11&x=128.5288182&y=35.8541694&stationId=433544&enc=b64
 		   02227	,	2.28기념중앙공원건너1	,	http://map.naver.com/?dlevel=11&x=128.5979063&y=35.8706364&stationId=432058&enc=b64
 		 */
+		// 첫줄 오류땜시 그냥 첫줄 흘려보냄
+		reader.readLine();
 		while(true){
 			String line = reader.readLine();
 			if(line == null)
@@ -89,7 +107,15 @@ public class CreateSql {
 			}
 		}
 		
+		is.close();
+		
 		return stationList;
+	}
+
+	private ArrayList<String> getBusInterval() throws Exception{
+		ArrayList<String> busList = new ArrayList<String>();
+		
+		return busList;
 	}
 	
 	@Getter @Setter class StationItem{

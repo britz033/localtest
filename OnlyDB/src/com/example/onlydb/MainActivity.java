@@ -1,8 +1,6 @@
 package com.example.onlydb;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -12,13 +10,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
 
 	private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
+	public final static String TABLE_NAME = "busInfo";
+	public final static int SOURCE_ID1 = R.raw.interval;
+	public final static int SOURCE_ID2 = R.raw.buspath;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +26,7 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		attachFragment();
-
-		DBworker dbworker = new DBworker(this);
-		Cursor cursor = dbworker.selectDB(null);
-
-		TextView tv = (TextView) findViewById(R.id.text_main);
-		cursor.moveToNext();
-		tv.setText(cursor.getString(1));
-
+		
 	}
 
 	@Override
@@ -52,8 +45,6 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	class StationProvider extends ContentProvider {
-
-		public static final String TABLE_NAME = "";
 
 		@Override
 		public int delete(Uri uri, String selection, String[] selectionArgs) {

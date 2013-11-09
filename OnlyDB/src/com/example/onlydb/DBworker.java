@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-
 /* db작업용
  * 쿼리의 종류는 역이름, 역번호
  * 이름검색후 역목록 커서리턴 (역찾기, 
@@ -21,73 +20,50 @@ import android.util.Log;
 
 public class DBworker {
 
-	public static final String DB_NAME = "CopyTestDB";
-	
+	public static final String DB_NAME = "StationDB2";
+
 	SQLiteDatabase db;
 	Context mcontext;
 
 	public DBworker(Context context) {
 		mcontext = context;
-		Log.d("dbworker","start");
-//		copyDB();
-//		Log.d("copyDB","complete");
-		
+		Log.d("dbworker", "start");
+
 		SQLiteOpenHelper helper = new SQLiteOpenHelper(context, DB_NAME, null, 1) {
-			
+
 			@Override
 			public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			}
-			
+
 			@Override
 			public void onCreate(SQLiteDatabase db) {
-				CreateSql csql = new CreateSql(db,mcontext);
+				CreateSql csql = new CreateSql(db, mcontext);
 			}
 		};
-		
+
 		db = helper.getWritableDatabase();
 	}
-	
-	private void copyDB() {
-		final String DB_PATH = "/data/data/" + mcontext.getPackageName() + "/databases/";
-		File db_dir = new File(DB_PATH);
-		File db_file = new File(DB_PATH + DB_NAME);
 
-		if (!db_file.exists()) {
-			try {
-				if(!db_dir.exists()){
-					db_dir.mkdir();
-				}
-				Log.d("create","createdb");
-				Log.d("directory",String.valueOf(db_dir.isDirectory()));
-				InputStream is = mcontext.getAssets().open(DB_NAME);
+	// _id , number, interval, forward, backward, favorite
+	public void insertDB(String tableName, String[] params) {
 
-				FileOutputStream fos = new FileOutputStream(db_file);
-
-				int num = is.available();
-				Log.d("num", "" + num);
-				byte buffer[] = new byte[num];
-				int length;
-				while ((length = is.read(buffer)) != -1) {
-					fos.write(buffer, 0, length);
-				}
-
-				fos.flush();
-				is.close();
-				fos.close();
-
-				Log.d("copy db", "------complete----");
-			} catch (Exception e) {
-				Log.d("copy db", "------error----");
-				e.printStackTrace();
+		db.beginTransaction();
+		try {
+			for (int i = 0; i < params.length; i++) {
+				String sql = "INSERT INTO " + tableName + " VALUES(" + params[i] + ")";
+				db.execSQL(sql);
 			}
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
 		}
 	}
-	
-	public Cursor selectDB(String select){
+
+	public Cursor selectDB(String select) {
 		String sql = "select * from stationInfo";
 		return db.rawQuery(sql, null);
 	}
-	
-	
 
 }

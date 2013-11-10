@@ -80,7 +80,7 @@ public class CreateSql {
 		Log.d("파일추출","시작");
 		ArrayList<StationItem> stationList = new ArrayList<StationItem>();
 		
-		InputStream is = mcontext.getResources().openRawResource(R.raw.latitude);
+		InputStream is = mcontext.getResources().openRawResource(R.raw.buspath);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
 		

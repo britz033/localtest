@@ -2,6 +2,9 @@ package com.example.onlydb;
 
 import java.util.ArrayList;
 
+import ParsingClass.BusItem;
+import ParsingClass.ParsingBusInterval;
+import ParsingClass.ParsingBusPath;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -11,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
-import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
 
@@ -25,8 +27,10 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		attachFragment();
-		
+		CopyDB hehe = new CopyDB(this);
+		WorkingThread thread = new WorkingThread(this);
+		thread.start();
+//		attachFragment();
 	}
 
 	@Override

@@ -2,7 +2,11 @@ package com.example.onlydb;
 
 import java.util.ArrayList;
 
+import ParsingClass.BusItem;
+import ParsingClass.ParsingBusInterval;
+import ParsingClass.ParsingBusPath;
 import android.content.Context;
+import android.util.Log;
 
 public class WorkingThread extends Thread {
 
@@ -13,6 +17,9 @@ public class WorkingThread extends Thread {
 	}
 
 	public void run() {
+		DBworker db = new DBworker(context);
+		
+		
 		ArrayList<String> source1 = new SourceFileReader(context, MainActivity.SOURCE_ID1).getSourceString();
 		ArrayList<String> source2 = new SourceFileReader(context, MainActivity.SOURCE_ID2).getSourceString();
 
@@ -30,19 +37,18 @@ public class WorkingThread extends Thread {
 		new ParsingBusPath(source2, buslist);
 
 		// 완성된 buslist 로 insert문 values파라메터 구성해서 쿼리로 날림
-
-		String[] params = new String[INDEX];
-		StringBuilder sb = new StringBuilder();
-
 		// (number,interval,forward,backward)
 		for (int i = 0; i < INDEX; i++) {
-			sb.append("(").append(buslist.get(i).getBusNumber()).append(",").append(buslist.get(i).getBusInterval());
-			sb.append(",").append(buslist.get(i).getBusFoward()).append(",").append(buslist.get(i).getBusBackward()).append(")");
+			StringBuilder sb = new StringBuilder();
 			
-			params[i] = sb.toString();
+			sb.append("'").append(buslist.get(i).getBusNumber()).append("','").append(buslist.get(i).getBusInterval());
+			sb.append("','").append(buslist.get(i).getBusFoward()).append("','").append(buslist.get(i).getBusBackward()).append("'");
+			
+			
+			db.insertDB(MainActivity.TABLE_NAME, sb.toString());
 		}
 		
-		DBworker db = new DBworker(context);
-		db.insertDB(MainActivity.TABLE_NAME, params);
+		Log.d("WorkingThread","실행완료");
+		
 	}
 }

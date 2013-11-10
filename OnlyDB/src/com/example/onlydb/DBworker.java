@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class DBworker {
 
-	public static final String DB_NAME = "StationDB2";
+	public static final String DB_NAME = "StationDB.db";
 
 	SQLiteDatabase db;
 	Context mcontext;
@@ -37,7 +37,8 @@ public class DBworker {
 
 			@Override
 			public void onCreate(SQLiteDatabase db) {
-				CreateSql csql = new CreateSql(db, mcontext);
+				Log.d("DB생성에 들어갔습니다", "몬가 잘못되었삼");
+//				 CreateSql csql = new CreateSql(db, mcontext);
 			}
 		};
 
@@ -45,20 +46,14 @@ public class DBworker {
 	}
 
 	// _id , number, interval, forward, backward, favorite
-	public void insertDB(String tableName, String[] params) {
-
-		db.beginTransaction();
-		try {
-			for (int i = 0; i < params.length; i++) {
-				String sql = "INSERT INTO " + tableName + " VALUES(" + params[i] + ")";
-				db.execSQL(sql);
-			}
-			db.setTransactionSuccessful();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			db.endTransaction();
-		}
+	public void insertDB(String tableName, String params) {
+		String sql = "INSERT INTO " + tableName + "(bus_number,bus_interval,bus_forward,bus_backward)" + " VALUES("
+				+ params + ")";
+		db.execSQL(sql);
+	}
+	
+	public void closeDB(){
+		db.close();
 	}
 
 	public Cursor selectDB(String select) {

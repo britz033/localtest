@@ -28,8 +28,11 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		CopyDB hehe = new CopyDB(this);
-		WorkingThread thread = new WorkingThread(this);
-		thread.start();
+		
+		StationInsertThread sthread = new StationInsertThread(this);
+		sthread.start();
+//		WorkingThread thread = new WorkingThread(this);
+//		thread.start();
 //		attachFragment();
 	}
 

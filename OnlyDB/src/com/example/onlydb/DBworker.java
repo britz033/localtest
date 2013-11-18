@@ -52,6 +52,12 @@ public class DBworker {
 		db.execSQL(sql);
 	}
 	
+	public void insertStationTable(String params){
+		String sql =  "INSERT INTO stationInfo(station_number,station_name,station_longitude,station_latitude) "
+				+ "VALUES(" + params + ")";
+		db.execSQL(sql);
+	}
+	
 	public void closeDB(){
 		db.close();
 	}
@@ -59,6 +65,10 @@ public class DBworker {
 	public Cursor selectDB(String select) {
 		String sql = "select * from stationInfo";
 		return db.rawQuery(sql, null);
+	}
+	
+	public SQLiteDatabase getDB(){
+		return db;
 	}
 
 }

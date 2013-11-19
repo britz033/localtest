@@ -53,7 +53,7 @@ public class DBworker {
 	}
 	
 	public void insertStationTable(String params){
-		String sql =  "INSERT INTO stationInfo(station_number,station_name,station_longitude,station_latitude) "
+		String sql =  "INSERT INTO stationInfo(station_number,station_name,station_longitude,station_latitude,station_id) "
 				+ "VALUES(" + params + ")";
 		db.execSQL(sql);
 	}

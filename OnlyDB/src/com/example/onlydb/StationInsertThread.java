@@ -18,14 +18,16 @@ public class StationInsertThread extends Thread {
 		this.context = context;
 	}
 
-	// (station_number,station_name,station_longitude,station_latitude,station_favorite)
-	// (주)성안건너 (00304):128.62451676809218,35.914943211140496
+//	(주)성안건너 (00304)#7021042100:128.62451676809218,35.914943211140496
+//	(주)영화건너 (03092)#7111058300:128.42330333277417,35.63367166859499
+//	(주)영화앞 (03091)#7111059100:128.42315333314116,35.63381166851292
 	public void run() {
 		DBworker dbWorker = new DBworker(context);
 		SQLiteDatabase db = dbWorker.getDB();
 		
 		try {
 			
+			// 이름 , 정류소번호, id, long, lati
 			
 
 			InputStream is = context.getResources().openRawResource(R.raw.bus_station);
@@ -40,15 +42,16 @@ public class StationInsertThread extends Thread {
 				StringBuilder params = new StringBuilder();
 				if ((line = reader.readLine()) == null)
 					break;
-				Pattern pattern = Pattern.compile("^(.+) \\((\\d+)\\):(\\d+.\\d+),(\\d+.\\d+)$");
+				Pattern pattern = Pattern.compile("^(.+) \\((\\d+)\\)#(\\d+):(\\d+.\\d+),(\\d+.\\d+)$");
 				Matcher matcher = pattern.matcher(line);
 				matcher.find();
 
 				params.append("'");
-				params.append(matcher.group(2)).append("','");
-				params.append(matcher.group(1)).append("','");
-				params.append(matcher.group(3)).append("','");
-				params.append(matcher.group(4)).append("'");
+				params.append(matcher.group(2)).append("','");	// 번호
+				params.append(matcher.group(1)).append("','");	// 이름
+				params.append(matcher.group(4)).append("','");	// long
+				params.append(matcher.group(5)).append("','");	// lati
+				params.append(matcher.group(3)).append("'");	// id
 
 				dbWorker.insertStationTable(params.toString());
 			}

@@ -1,5 +1,6 @@
 package ParsingClass;
 
+//
 public class BusItem {
 	private String busNumber;
 	private String busInterval;

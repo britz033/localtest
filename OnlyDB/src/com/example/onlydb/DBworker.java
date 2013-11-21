@@ -58,6 +58,11 @@ public class DBworker {
 		db.execSQL(sql);
 	}
 	
+	public void updateBusTable(String params, int index){
+		String sql = "UPDATE busInfo set " + params + "where _id=" + index;
+		db.execSQL(sql);
+	}
+	
 	public void closeDB(){
 		db.close();
 	}

@@ -7,19 +7,21 @@ import ParsingClass.ParsingBusInterval;
 import ParsingClass.ParsingBusPath;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements NotifyComplete{
 
 	private static final String TAG_FRAGMENT_SEARCH = "fragment_search";
 	public final static String TABLE_NAME = "busInfo";
-	public final static int SOURCE_ID1 = R.raw.interval;
+	public final static int SOURCE_ID1 = R.raw.bus_code;
 	public final static int SOURCE_ID2 = R.raw.buspath;
 
 	@Override
@@ -29,8 +31,10 @@ public class MainActivity extends FragmentActivity {
 
 		CopyDB hehe = new CopyDB(this);
 		
-		StationInsertThread sthread = new StationInsertThread(this);
-		sthread.start();
+		new BusUpdateThread(this).start(); 
+		
+//		StationInsertThread sthread = new StationInsertThread(this);
+//		sthread.start();
 //		WorkingThread thread = new WorkingThread(this);
 //		thread.start();
 //		attachFragment();
@@ -84,6 +88,14 @@ public class MainActivity extends FragmentActivity {
 				String[] selectionArgs) {
 			return 0;
 		}
+	}
+
+	@Override
+	public void complete() {
+		Log.d("DB작업","완료되었습니다");
+		Uri pakageUri = Uri.parse("package:"+getPackageName());
+		Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, pakageUri);
+		startActivity(intent);
 	}
 
 }

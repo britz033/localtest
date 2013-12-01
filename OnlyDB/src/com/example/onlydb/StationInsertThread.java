@@ -13,47 +13,48 @@ import android.util.Log;
 public class StationInsertThread extends Thread {
 
 	private Context context;
+	private NotifyComplete threadEnd;
 
 	public StationInsertThread(Context context) {
 		this.context = context;
+		threadEnd = (NotifyComplete) context;
 	}
 
-//	(주)성안건너 (00304)#7021042100:128.62451676809218,35.914943211140496
-//	(주)영화건너 (03092)#7111058300:128.42330333277417,35.63367166859499
-//	(주)영화앞 (03091)#7111059100:128.42315333314116,35.63381166851292
 	public void run() {
 		DBworker dbWorker = new DBworker(context);
 		SQLiteDatabase db = dbWorker.getDB();
-		
-		try {
-			
-			// 이름 , 정류소번호, id, long, lati
-			
 
-			InputStream is = context.getResources().openRawResource(R.raw.bus_station);
+		db.execSQL("ALTER TABLE stationInfo ADD COLUMN station_pass TEXT");
+
+		try {
+
+			// 이름 , 정류소번호, id, long, lati
+
+			InputStream is = context.getResources().openRawResource(R.raw.passid);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
 			String line = null;
 
 			reader.readLine();
-			
+
+			int index = 1;
 			db.beginTransaction();
 			while (true) {
-				StringBuilder params = new StringBuilder();
+				StringBuilder params = new StringBuilder("station_pass=");
 				if ((line = reader.readLine()) == null)
 					break;
-				Pattern pattern = Pattern.compile("^(.+) \\((\\d+)\\)#(\\d+):(\\d+.\\d+),(\\d+.\\d+)$");
+				Pattern pattern = Pattern.compile(":(.+)$");
 				Matcher matcher = pattern.matcher(line);
-				matcher.find();
+				if (matcher.find()) {
+					params.append("'");
+					params.append(matcher.group(1)).append("'"); // 이름
+				} else {
+					Log.d("매치실패",line);
+					index++;
+					continue;
+				}
 
-				params.append("'");
-				params.append(matcher.group(2)).append("','");	// 번호
-				params.append(matcher.group(1)).append("','");	// 이름
-				params.append(matcher.group(4)).append("','");	// long
-				params.append(matcher.group(5)).append("','");	// lati
-				params.append(matcher.group(3)).append("'");	// id
-
-				dbWorker.insertStationTable(params.toString());
+				dbWorker.updateTable("stationInfo", params.toString(), "_id", index++);
 			}
 			db.setTransactionSuccessful();
 
@@ -62,7 +63,7 @@ public class StationInsertThread extends Thread {
 		} finally {
 			db.endTransaction();
 			db.close();
-			Log.d("스레드","완료했습니다");
+			threadEnd.complete();
 		}
 	}
 }

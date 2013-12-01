@@ -38,10 +38,12 @@ public final class R {
         public static final int main=0x7f080000;
     }
     public static final class raw {
-        public static final int bus_code=0x7f040000;
-        public static final int bus_station=0x7f040001;
-        public static final int buspath=0x7f040002;
-        public static final int passid=0x7f040003;
+        public static final int bus_add=0x7f040000;
+        public static final int bus_add2=0x7f040001;
+        public static final int bus_code=0x7f040002;
+        public static final int bus_station=0x7f040003;
+        public static final int buspath=0x7f040004;
+        public static final int passid=0x7f040005;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;

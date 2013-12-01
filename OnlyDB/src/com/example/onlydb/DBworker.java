@@ -1,10 +1,5 @@
 package com.example.onlydb;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
-import temporary.CreateSql;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,14 +47,13 @@ public class DBworker {
 		db.execSQL(sql);
 	}
 	
-	public void insertStationTable(String params){
-		String sql =  "INSERT INTO stationInfo(station_number,station_name,station_longitude,station_latitude,station_id) "
-				+ "VALUES(" + params + ")";
+	public void insertTable(String table, String column, String params){
+		String sql =  "INSERT INTO "+ table +"(" + column + ") " + "VALUES(" + params + ")";
 		db.execSQL(sql);
 	}
 	
-	public void updateBusTable(String params, int index){
-		String sql = "UPDATE busInfo set " + params + "where _id=" + index;
+	public void updateTable(String table, String params, String selection, int index){
+		String sql = "UPDATE " + table + " set " + params + " where "+ selection + "=" + index;
 		db.execSQL(sql);
 	}
 	

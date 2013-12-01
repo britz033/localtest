@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.Getter;
-import lombok.Setter;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -118,11 +116,37 @@ public class CreateSql {
 		return busList;
 	}
 	
-	@Getter @Setter class StationItem{
+	class StationItem{
 		private String station_number;
 		private String station_name;
 		private double station_latitude;
 		private double station_longitude;
+		public String getStation_number() {
+			return station_number;
+		}
+		public void setStation_number(String station_number) {
+			this.station_number = station_number;
+		}
+		public String getStation_name() {
+			return station_name;
+		}
+		public void setStation_name(String station_name) {
+			this.station_name = station_name;
+		}
+		public double getStation_latitude() {
+			return station_latitude;
+		}
+		public void setStation_latitude(double station_latitude) {
+			this.station_latitude = station_latitude;
+		}
+		public double getStation_longitude() {
+			return station_longitude;
+		}
+		public void setStation_longitude(double station_longitude) {
+			this.station_longitude = station_longitude;
+		}
+		
+		
 	}
 
 }

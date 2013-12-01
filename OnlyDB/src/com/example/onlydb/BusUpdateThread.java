@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class BusUpdateThread extends Thread {
@@ -23,51 +24,42 @@ public class BusUpdateThread extends Thread {
 		SQLiteDatabase db = dbWorker.getDB();
 		
 		try{
-			SourceFileReader codeSource = new SourceFileReader(context, R.raw.bus_code);
+			SourceFileReader addSource = new SourceFileReader(context, R.raw.bus_add2);
 //			SourceFileReader pathSource = new SourceFileReader(context, R.raw.buspath);
 			
-			ArrayList<String> busCode = codeSource.getSourceString();
+			ArrayList<String> busCode = addSource.getSourceString();
 //			ArrayList<String> busPath = pathSource.getSourceString();
 			
-			//급행2	1000002000	9 분,11 분
-			//급행3	1000003000	11 분,12 분
-			// x 탭 x 탭 x
-			
+			// 0-89	3690000110	1회	문양역건너,문양역앞,문양기지창앞,문양리입구2,동곡초등학교    도도엉,나아닐ㅇ,,
+			// x 번호 x id x 인터벌 x for x back
+			// 번호는 있고, id랑 인터벌, for, back 넣기. i 순으로
 			
 			db.beginTransaction();
 			for (int i = 0; i < busCode.size(); i++) {
-				Pattern pattern = Pattern.compile("^(.+)\\t(.+)\\t(.+)$");
+				Pattern pattern = Pattern.compile("^([^\\t.]+)\\t([^\\t.]+)\\t([^\\t.]+)\\t([^\\t.]+)\\t?(.*)$");
 				Matcher matcher = pattern.matcher(busCode.get(i));
 				
 				matcher.find();
 				String busNum = matcher.group(1);
 				String busId = matcher.group(2);
 				String busInterval = matcher.group(3);
-				
-				pattern = Pattern.compile("^(.+),(.+)$");
-				matcher = pattern.matcher(busInterval);
-				matcher.find();
-				String day = matcher.group(1);
-				String holyDay = matcher.group(2);
-				
-//				101 (파계사방면)	3000101000	19 분, 
-//				101 (덕곡방면)	3000101001	97 분(일 8회), 
-//				101 (파계사방면(휴일))	3000101002	 ,21 분
-				
-				if(day.equals(" "))
-					busInterval = "휴일:"+holyDay;
-				else if(holyDay.equals(" "))
-					busInterval = day;
-				else
-					busInterval = "평일:"+day+", 휴일:"+holyDay;
-				
+				String busForward = matcher.group(4);
+				String busBackward = matcher.group(5);
+
 				StringBuilder sb = new StringBuilder();
 				
-				sb.append("bus_number=").append("'" +busNum+ "'").append(",");
-				sb.append("bus_interval=").append("'" +busInterval+ "'").append(",");
-				sb.append("bus_id=").append("'" +busId+ "'");
+				sb.append("bus_id='"+busId+"',");
+				sb.append("bus_interval='"+busInterval+"',");
+				sb.append("bus_forward='"+busForward+"',");
+				if(TextUtils.isEmpty(busBackward)){
+					sb.append("bus_backward=null");
+				} else
+					sb.append("bus_backward='"+busBackward+"'");
 				
-				dbWorker.updateBusTable(sb.toString(), i+1);
+				if(i==6 || i==7)
+					Log.d("디버그",busNum);
+				dbWorker.updateTable("busInfo",sb.toString(),"_id", i+241);
+//				dbWorker.insertTable("busInfo", "bus_number,bus_id,bus_forward", "'"+busNum+"','"+busId+"','임시'");
 			}
 			db.setTransactionSuccessful();
 			

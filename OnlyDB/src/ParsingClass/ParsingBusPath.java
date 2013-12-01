@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.util.Log;
-
 public class ParsingBusPath extends ParsingWork{
 
 	public ParsingBusPath(ArrayList<String> source, ArrayList<BusItem> buslist) {

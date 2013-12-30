@@ -36,6 +36,7 @@ public class UpdateThread extends Thread {
 			db.beginTransaction();
 			for (int i = 0; i < cursor.getCount(); i++) {
 
+				cursor.moveToNext();
 				id = cursor.getInt(0);
 				latitude = cursor.getDouble(1);
 				longitude = cursor.getDouble(2);

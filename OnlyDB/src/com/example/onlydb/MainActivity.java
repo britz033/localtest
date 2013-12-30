@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements NotifyComplete{
 		copyDB = new CopyDB(this);
 		copyDB.toPhone();
 		
-		new BusUpdateThread(this).start();
+		new UpdateThread(this).start();
 	}
 
 	@Override

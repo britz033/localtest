@@ -23,16 +23,13 @@ public class UpdateThread extends Thread {
 
 		Cursor cursor = null;
 		try {
-			final double value = 0.000384;
-			final double value2 = 0.000172;
+			final double value = 1.13;
 			
 			String sql = "select _id,station_latitude,station_longitude from stationInfo";
 			cursor = db.rawQuery(sql, null);
 			int id = 0;
 			double latitude = 0;
 			double longitude = 0;
-			double result = 0;
-			double result2 = 0;
 			db.beginTransaction();
 			for (int i = 0; i < cursor.getCount(); i++) {
 
@@ -41,17 +38,8 @@ public class UpdateThread extends Thread {
 				latitude = cursor.getDouble(1);
 				longitude = cursor.getDouble(2);
 				
-				
-				if (id % 2 == 0) {
-					result = (double)id * value;
-					result2 = (double)id * value2;
-				} else {
-					result = (double)id* value;
-					result2 = (double)id* value2;
-				}
-				
-				latitude += result;
-				longitude += result2;
+				latitude *= value;
+				longitude *= value;
 				
 				String sql2 = "UPDATE stationInfo SET station_latitude=" + latitude + ",station_longitude=" + longitude + " WHERE _id=" + id;
 				db.execSQL(sql2);
